@@ -2,7 +2,7 @@ import pygame
 from sys import exit
 from random import randint, choice
 from scripts.player import Player
-from scripts.enemies import Enemies
+from scripts.enemies import Enemy
 from scripts.powerups import PowerUp
 from scripts.projectile import Projectile
 
@@ -19,6 +19,8 @@ projectiles = pygame.sprite.Group()
 
 player.add(Player())
 
+enemy_spawn_timer = pygame.USEREVENT + 1
+pygame.time.set_timer(enemy_spawn_timer, 400)
 
 while True:
     for event in pygame.event.get():
@@ -26,10 +28,17 @@ while True:
             pygame.quit()
             exit()
 
+        if event.type == enemy_spawn_timer:
+            enemies.add(Enemy())
+            print("Enemy spawned")
+
     window.blit(background, (0, 0))
 
     player.update()
     player.draw(window)
+
+    enemies.update()
+    enemies.draw(window)
 
     pygame.display.update()
     clock.tick(60)
