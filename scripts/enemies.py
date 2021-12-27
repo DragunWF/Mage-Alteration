@@ -13,11 +13,14 @@ class Enemy(pygame.sprite.Sprite):
         if color == "blue":
             self.image = pygame.image.load("sprites/enemies/blue.png")
 
-        self.right = self.image
-        self.left = pygame.transform.flip(self.image, True, False)
+        right = self.image
+        left = pygame.transform.flip(self.image, True, False)
 
+        self.image = right if position_x == -20 else left
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(center=(position_x, 340))
+
+        self.health = 2
         self.speed = 4 if position_x == -20 else -4
         self.gravity = 0
 

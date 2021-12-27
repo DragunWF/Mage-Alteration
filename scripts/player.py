@@ -19,6 +19,9 @@ class Player(pygame.sprite.Sprite):
 
         self.gravity = 0
 
+        self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
+        self.cast_sound = pygame.mixer.Sound("audio/cast.wav")
+
     def damaged(self):
         pass
 
