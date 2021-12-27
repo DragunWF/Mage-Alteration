@@ -7,19 +7,29 @@ from scripts.powerups import PowerUp
 from scripts.projectile import Projectile
 
 pygame.init()
-screen = pygame.display.set_mode((800, 500))
+window = pygame.display.set_mode((800, 400))
 clock = pygame.time.Clock()
+background = pygame.image.load(
+    "sprites/environment/background.png").convert_alpha()
 
-test = pygame.image.load("sprites/red/red.png").convert_alpha()
-test = pygame.transform.scale(test, (64, 64))
+player = pygame.sprite.GroupSingle()
+enemies = pygame.sprite.Group()
+powerups = pygame.sprite.Group()
+projectiles = pygame.sprite.Group()
+
+player.add(Player())
+
 
 while True:
-    screen.blit(test, (400, 250))
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
+
+    window.blit(background, (0, 0))
+
+    player.update()
+    player.draw(window)
 
     pygame.display.update()
     clock.tick(60)
