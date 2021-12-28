@@ -5,13 +5,14 @@ from random import randint, choice
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        color = choice(("red", "blue"))
+        enemy_types = ("red", "blue")
+        color = choice(enemy_types)
         position_x = choice((-20, 820))
 
-        if color == "red":
-            self.image = pygame.image.load("sprites/enemies/red.png")
-        if color == "blue":
-            self.image = pygame.image.load("sprites/enemies/blue.png")
+        for enemy in enemy_types:
+            if color == enemy:
+                self.image = pygame.image.load(f"sprites/enemies/{enemy}.png")
+                break
 
         right = self.image
         left = pygame.transform.flip(self.image, True, False)
@@ -27,6 +28,11 @@ class Enemy(pygame.sprite.Sprite):
     def damaged(self):
         pass
 
+    def visibility_check(self):
+        if self.rect.x >= 840 or self.rect.x <= -50:
+            print("delete enemy")
+            self.kill()
+
     def movement(self):
         self.rect.x += self.speed
 
@@ -39,3 +45,4 @@ class Enemy(pygame.sprite.Sprite):
     def update(self):
         self.apply_gravity()
         self.movement()
+        self.visibility_check()

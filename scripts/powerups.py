@@ -3,7 +3,7 @@ import pygame
 
 class PowerUp(pygame.sprite.Sprite):
     def __init__(self):
-        pass
+        super().__init__()
 
     def movement(self):
         pass

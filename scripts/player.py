@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
         self.health = 3
-        self.speed = 3
+        self.speed = 5
         self.jump_force = -15
 
         self.image = pygame.image.load(
@@ -18,9 +18,10 @@ class Player(pygame.sprite.Sprite):
         self.flipped_img = pygame.transform.flip(self.image, True, False)
 
         self.gravity = 0
+        self.spell_cooldown = 0
 
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
-        self.cast_sound = pygame.mixer.Sound("audio/cast.wav")
+        self.cast_sound = pygame.mixer.Sound("audio/cast.ogg")
 
     def damaged(self):
         pass
@@ -42,6 +43,10 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.gravity
         if self.rect.bottom >= 352:
             self.rect.bottom = 352
+
+    def visibility_check(self):
+        if self.rect.x >= 815 or self.rect.x <= -15:
+            self.kill()
 
     def update(self):
         self.apply_gravity()

@@ -40,11 +40,14 @@ while True:
             pygame.quit()
             exit()
 
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            projectiles.add(Projectile(
+                "player", player.sprite.rect.x, player.sprite.rect.y))
+
         if event.type == player_damage_cooldown:
             pass
         if event.type == enemy_spawn_timer:
             enemies.add(Enemy())
-            print("Enemy spawned")
         if event.type == powerup_spawn_timer:
             pass
         if event.type == scaling_difficulty_timer:
