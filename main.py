@@ -22,6 +22,9 @@ powerup_spawn_timer = pygame.USEREVENT + 2
 scaling_difficulty_timer = pygame.USEREVENT + 3
 enemy_spawn_timer = pygame.USEREVENT + 4
 
+player_cast_cooldown = pygame.USEREVENT + 5
+cast_on_cooldown = False
+
 
 def check_collisions():
     if player.sprite and player.sprite.health > 0:
@@ -40,9 +43,15 @@ while True:
             pygame.quit()
             exit()
 
-        if event.type == pygame.MOUSEBUTTONDOWN:
+        if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown:
             projectiles.add(Projectile(
-                "player", player.sprite.rect.x, player.sprite.rect.y))
+                "player", player.sprite.rect.x,
+                player.sprite.rect.y, player.sprite.direction))
+            cast_on_cooldown = True
+            pygame.time.set_timer(player_cast_cooldown, 250)
+        if event.type == player_cast_cooldown:
+            cast_on_cooldown = False
+            pygame.time.set_timer(player_cast_cooldown, 0)
 
         if event.type == player_damage_cooldown:
             pass
@@ -57,14 +66,14 @@ while True:
 
     window.blit(background, (0, 0))
 
+    projectiles.update()
+    projectiles.draw(window)
+
     player.update()
     player.draw(window)
 
     enemies.update()
     enemies.draw(window)
-
-    projectiles.update()
-    projectiles.draw(window)
 
     powerups.update()
     powerups.draw(window)

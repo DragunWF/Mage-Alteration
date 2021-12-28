@@ -16,6 +16,7 @@ class Player(pygame.sprite.Sprite):
 
         self.default_img = self.image
         self.flipped_img = pygame.transform.flip(self.image, True, False)
+        self.direction = "right"
 
         self.gravity = 0
         self.spell_cooldown = 0
@@ -34,9 +35,11 @@ class Player(pygame.sprite.Sprite):
         if key[pygame.K_d]:
             self.rect.x += speed
             self.image = self.default_img
+            self.direction = "right"
         elif key[pygame.K_a]:
             self.rect.x -= speed
             self.image = self.flipped_img
+            self.direction = "left"
 
     def apply_gravity(self):
         self.gravity += 1
