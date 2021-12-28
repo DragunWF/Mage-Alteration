@@ -35,7 +35,7 @@ player.add(Player())
 
 
 def check_collisions():
-    if player.sprite and player.sprite.health > 0:
+    if player.sprite:
         if pygame.sprite.spritecollide(player.sprite, enemies, False):
             player.sprite.damaged()
 

@@ -6,20 +6,24 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.direction = direction
         self.origin = origin
+        origins = ("player", "enemy", "sky")
+        colors = ("green", "blue", "red")
 
-        if origin == "player":
-            frame_1 = pygame.image.load(
-                "sprites/projectiles/green/green_1.png").convert_alpha()
-            frame_2 = pygame.image.load(
-                "sprites/projectiles/green/green_2.png").convert_alpha()
-            frame_3 = pygame.image.load(
-                "sprites/projectiles/green/green_3.png").convert_alpha()
-            frame_4 = pygame.image.load(
-                "sprites/projectiles/green/green_4.png").convert_alpha()
-            frame_5 = pygame.image.load(
-                "sprites/projectiles/green/green_5.png").convert_alpha()
-        if origin == "enemy":
-            pass
+        for x in range(3):
+            if origin == origins[x]:
+                color = colors[x]
+                break
+
+        frame_1 = pygame.image.load(
+            f"sprites/projectiles/{color}/{color}_1.png").convert_alpha()
+        frame_2 = pygame.image.load(
+            f"sprites/projectiles/{color}/{color}_2.png").convert_alpha()
+        frame_3 = pygame.image.load(
+            f"sprites/projectiles/{color}/{color}_3.png").convert_alpha()
+        frame_4 = pygame.image.load(
+            f"sprites/projectiles/{color}/{color}_4.png").convert_alpha()
+        frame_5 = pygame.image.load(
+            f"sprites/projectiles/{color}/{color}_5.png").convert_alpha()
 
         self.frames = (frame_1, frame_2, frame_3, frame_4,
                        frame_5, frame_5, frame_5, frame_4,

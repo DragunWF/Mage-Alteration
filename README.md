@@ -1,4 +1,4 @@
-**Mage Alteration**
+# Mage Alteration
 
 Hello, I made this game for a pygame game jam in itch.io.
 
