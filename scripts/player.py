@@ -29,15 +29,14 @@ class Player(pygame.sprite.Sprite):
 
     def movement(self):
         key = pygame.key.get_pressed()
-        diagonal_speed, speed = self.speed * 0.75, self.speed
         if key[pygame.K_SPACE] and self.rect.bottom >= 352:
             self.gravity = self.jump_force
         if key[pygame.K_d]:
-            self.rect.x += speed
+            self.rect.x += self.speed
             self.image = self.default_img
             self.direction = "right"
         elif key[pygame.K_a]:
-            self.rect.x -= speed
+            self.rect.x -= self.speed
             self.image = self.flipped_img
             self.direction = "left"
 

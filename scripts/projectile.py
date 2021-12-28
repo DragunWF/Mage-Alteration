@@ -4,6 +4,8 @@ import pygame
 class Projectile(pygame.sprite.Sprite):
     def __init__(self, origin, x_pos, y_pos, direction):
         super().__init__()
+        self.direction = direction
+        self.origin = origin
 
         if origin == "player":
             frame_1 = pygame.image.load(
@@ -25,7 +27,6 @@ class Projectile(pygame.sprite.Sprite):
         self.index = 0
         self.image = self.frames[self.index]
         self.rect = self.image.get_rect(center=(x_pos, y_pos + 7.5))
-        self.direction = direction
 
     def movement(self):
         self.rect.x += 8.5 if self.direction == "right" else -8.5
@@ -39,7 +40,6 @@ class Projectile(pygame.sprite.Sprite):
 
     def visibility_check(self):
         if self.rect.x >= 825 or self.rect.x <= -35:
-            print("delete projectile")
             self.kill()
 
     def update(self):

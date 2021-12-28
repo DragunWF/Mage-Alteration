@@ -23,6 +23,7 @@ class Enemy(pygame.sprite.Sprite):
 
         self.health = 2
         self.speed = 4 if position_x == -20 else -4
+        self.direction = "left" if position_x == 820 else "right"
         self.gravity = 0
 
     def damaged(self):
