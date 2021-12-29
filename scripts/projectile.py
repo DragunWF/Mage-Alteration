@@ -6,12 +6,11 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.direction = direction
         self.origin = origin
-        origins = ("player", "enemy", "sky")
-        colors = ("green", "blue", "red")
+        pairs = {"player": "green", "enemy": "blue", "sky": "red"}
 
-        for x in range(3):
-            if origin == origins[x]:
-                color = colors[x]
+        for key in pairs:
+            if origin == key:
+                color = pairs[key]
                 break
 
         frame_1 = pygame.image.load(
@@ -25,12 +24,18 @@ class Projectile(pygame.sprite.Sprite):
         frame_5 = pygame.image.load(
             f"sprites/projectiles/{color}/{color}_5.png").convert_alpha()
 
+        def scale(image):
+            return pygame.transform.scale(image, (40, 40))
+
         self.frames = (frame_1, frame_2, frame_3, frame_4,
                        frame_5, frame_5, frame_5, frame_4,
                        frame_3, frame_2, frame_1)
         self.index = 0
+
         self.image = self.frames[self.index]
         self.rect = self.image.get_rect(center=(x_pos, y_pos + 7.5))
+
+        self.frames = list(map(scale, self.frames))
 
     def movement(self):
         self.rect.x += 8.5 if self.direction == "right" else -8.5
@@ -40,7 +45,6 @@ class Projectile(pygame.sprite.Sprite):
             self.index = 0
         self.index += 0.4
         self.image = self.frames[int(self.index)]
-        self.image = pygame.transform.scale(self.image, (40, 40))
 
     def visibility_check(self):
         if self.rect.x >= 825 or self.rect.x <= -35:
