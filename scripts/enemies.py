@@ -27,7 +27,7 @@ class Enemy(pygame.sprite.Sprite):
         self.gravity = 0
 
     def damaged(self):
-        pass
+        self.health -= 1
 
     def visibility_check(self):
         if self.rect.x >= 840 or self.rect.x <= -50:

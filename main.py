@@ -1,4 +1,5 @@
 import pygame
+import scripts.ui_elements as ui
 from sys import exit
 from random import randint, choice
 from scripts.player import Player
@@ -11,6 +12,9 @@ window = pygame.display.set_mode((800, 400))
 clock = pygame.time.Clock()
 background = pygame.image.load(
     "sprites/environment/background.png").convert_alpha()
+
+main_menu = False
+in_game = True
 
 score = 0
 difficulty_level = 0
@@ -35,6 +39,7 @@ player.add(Player())
 
 
 def check_collisions():
+    global score
     if player.sprite:
         if pygame.sprite.spritecollide(player.sprite, enemies, False):
             player.sprite.damaged()
@@ -42,6 +47,7 @@ def check_collisions():
     enemies_shot = pygame.sprite.groupcollide(
         enemies, player_projectiles, False, True)
     for enemy in enemies_shot:
+        score += 3
         enemy.kill()
 
 
@@ -73,6 +79,8 @@ while True:
             pass
 
     window.blit(background, (0, 0))
+
+    window.blit(ui.score(score), (25, 25))
 
     player_projectiles.update()
     player_projectiles.draw(window)

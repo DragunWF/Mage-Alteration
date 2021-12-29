@@ -35,7 +35,7 @@ class Projectile(pygame.sprite.Sprite):
         self.image = self.frames[self.index]
         self.rect = self.image.get_rect(center=(x_pos, y_pos + 7.5))
 
-        self.frames = list(map(scale, self.frames))
+        self.frames = tuple(map(scale, self.frames))
 
     def movement(self):
         self.rect.x += 8.5 if self.direction == "right" else -8.5
@@ -47,7 +47,7 @@ class Projectile(pygame.sprite.Sprite):
         self.image = self.frames[int(self.index)]
 
     def visibility_check(self):
-        if self.rect.x >= 825 or self.rect.x <= -35:
+        if self.rect.x >= 825 or self.rect.x <= -35 or self.rect.y >= 352:
             self.kill()
 
     def update(self):
