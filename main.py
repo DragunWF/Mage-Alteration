@@ -13,7 +13,7 @@ clock = pygame.time.Clock()
 background = pygame.image.load(
     "sprites/environment/background.png").convert_alpha()
 
-main_menu = False
+start_menu = False
 in_game = True
 
 score = 0
@@ -32,8 +32,11 @@ enemy_spawn_timer = pygame.USEREVENT + 4
 player_cast_cooldown = pygame.USEREVENT + 5
 cast_on_cooldown = False
 
+score_timer = pygame.USEREVENT + 6
+
 # ---------- For Testing Purposes ----------
 pygame.time.set_timer(enemy_spawn_timer, 1500)
+pygame.time.set_timer(score_timer, 1000)
 player.add(Player())
 # ------------------------------------------
 
@@ -48,7 +51,11 @@ def check_collisions():
         enemies, player_projectiles, False, True)
     for enemy in enemies_shot:
         score += 3
-        enemy.kill()
+        enemy.damaged()
+
+
+def main_menu():
+    pass
 
 
 while True:
@@ -59,28 +66,36 @@ while True:
 
         # Player Events
         if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown:
+            player.sprite.cast_sound.play()
             player_projectiles.add(Projectile(
                 "player", player.sprite.rect.x,
                 player.sprite.rect.y, player.sprite.direction))
             cast_on_cooldown = True
             pygame.time.set_timer(player_cast_cooldown, 250)
+
         if event.type == player_cast_cooldown:
             cast_on_cooldown = False
             pygame.time.set_timer(player_cast_cooldown, 0)
+
         if event.type == player_damage_cooldown:
             pass
 
         # Misc Events
+        if event.type == score_timer and player.sprite:
+            score += 1
+
         if event.type == enemy_spawn_timer:
             enemies.add(Enemy())
+
         if event.type == powerup_spawn_timer:
             pass
+
         if event.type == scaling_difficulty_timer:
             pass
 
     window.blit(background, (0, 0))
 
-    window.blit(ui.score(score), (25, 25))
+    window.blit(ui.score(score), (20, 15))
 
     player_projectiles.update()
     player_projectiles.draw(window)

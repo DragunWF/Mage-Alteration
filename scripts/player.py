@@ -12,7 +12,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.image.load(
             "sprites/player/player.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (64, 64))
-        self.rect = self.image.get_rect(center=(400, 150))
+        self.rect = self.image.get_rect(center=(400, -50))
 
         self.default_img = self.image
         self.flipped_img = pygame.transform.flip(self.image, True, False)
@@ -24,6 +24,10 @@ class Player(pygame.sprite.Sprite):
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
         self.cast_sound = pygame.mixer.Sound("audio/cast.ogg")
         self.jump_sound = pygame.mixer.Sound("audio/jump.wav")
+
+        self.dmg_sound.set_volume(0.2)
+        self.cast_sound.set_volume(0.2)
+        self.jump_sound.set_volume(0.5)
 
     def damaged(self):
         pass

@@ -33,7 +33,7 @@ class Projectile(pygame.sprite.Sprite):
         self.index = 0
 
         self.image = self.frames[self.index]
-        self.rect = self.image.get_rect(center=(x_pos, y_pos + 7.5))
+        self.rect = self.image.get_rect(center=(x_pos + 4, y_pos + 7.5))
 
         self.frames = tuple(map(scale, self.frames))
 
