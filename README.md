@@ -8,3 +8,7 @@ Hello, I made this game for a pygame game jam in itch.io.
 - [Link to the game jam](https://itch.io/jam/pygame-new-years-jam)
 
 The fonts and sound effects are from [Kenney's Website](https://www.kenney.nl/).
+
+Attributions:
+- [Damage Sound Effect (damage.wav)]()
+- [Jump Sound Effect (jump.wav)]()

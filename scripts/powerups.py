@@ -16,7 +16,6 @@ class PowerUp(pygame.sprite.Sprite):
 
     def visibility_check(self):
         if self.rect.y >= 425:
-            print("delete powerup")
             self.kill()
 
     def movement(self):

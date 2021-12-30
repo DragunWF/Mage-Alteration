@@ -25,13 +25,21 @@ class Player(pygame.sprite.Sprite):
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
         self.cast_sound = pygame.mixer.Sound("audio/cast.ogg")
         self.jump_sound = pygame.mixer.Sound("audio/jump.wav")
+        self.pick_up_sound = pygame.mixer.Sound("audio/pickUp.wav")
 
         self.dmg_sound.set_volume(0.2)
         self.cast_sound.set_volume(0.2)
         self.jump_sound.set_volume(0.1)
+        self.pick_up_sound.set_volume(0.5)
 
     def mutated_state(self):
         pass
+
+    def powerup_pickup(self, powerup):
+        if powerup == "health":
+            self.pick_up_sound.play()
+            self.health += 1
+            return
 
     def damaged(self):
         self.dmg_sound.play()

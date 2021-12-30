@@ -77,6 +77,12 @@ def check_collisions():
             player_damage_immunity = True
             pygame.time.set_timer(player_damage_cooldown, 1000)
 
+        pwr_collision = pygame.sprite.spritecollide(
+            player.sprite, powerups, False)
+        for powerup in pwr_collision:
+            player.sprite.powerup_pickup(powerup.powerup)
+            powerup.kill()
+
     enemies_shot = pygame.sprite.groupcollide(
         enemies, player_projectiles, False, True)
     for enemy in enemies_shot:
