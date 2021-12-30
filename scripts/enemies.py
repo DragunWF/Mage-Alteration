@@ -1,16 +1,20 @@
 import pygame
+import math
+from .projectile import Projectile
 from random import randint, choice
+
+enemy_projectiles = pygame.sprite.Group()
 
 
 class Enemy(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        enemy_types = ("red", "blue")
-        color = choice(enemy_types)
+        enemy_types = ("red", "red", "red", "blue", "blue")
         position_x = choice((-20, 820))
+        self.color = choice(enemy_types)
 
         for enemy in enemy_types:
-            if color == enemy:
+            if self.color == enemy:
                 self.image = pygame.image.load(f"sprites/enemies/{enemy}.png")
                 break
 
@@ -25,12 +29,28 @@ class Enemy(pygame.sprite.Sprite):
         self.speed = 4 if position_x == -20 else -4
         self.direction = "left" if position_x == 820 else "right"
         self.gravity = 0
+        self.cast_time = 0
+
+        self.knockout_time = 0
+        self.knockbacked = False
 
     def knockback_state(self):
-        pass
+        self.knockout_time += 1
+        if self.knockout_time >= 90:
+            self.knockout_time = 0
+            self.knockbacked = False
+
+    def cast_spell(self):
+        global enemy_projectiles
+        self.cast_time += 1
+        if self.cast_time % 60 == 0:
+            enemy_projectiles.add(Projectile("enemy", self.rect.x,
+                                             self.rect.y, self.direction))
 
     def damaged(self):
         self.health -= 1
+        self.rect.x += -15 if self.direction == "right" else 15
+        self.knockbacked = True
         if self.health < 1:
             self.kill()
 
@@ -39,7 +59,11 @@ class Enemy(pygame.sprite.Sprite):
             self.kill()
 
     def movement(self):
-        self.rect.x += self.speed
+        if not self.knockbacked:
+            self.rect.x += self.speed
+        else:
+            self.rect.x += self.speed - 3 if self.direction == "right" else -3
+            self.knockback_state()
 
     def apply_gravity(self):
         self.gravity += 1
@@ -48,6 +72,8 @@ class Enemy(pygame.sprite.Sprite):
             self.rect.bottom = 352
 
     def update(self):
-        self.apply_gravity()
+        if self.color == "blue":
+            self.cast_spell()
         self.movement()
+        self.apply_gravity()
         self.visibility_check()

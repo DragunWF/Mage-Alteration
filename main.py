@@ -4,6 +4,7 @@ from sys import exit
 from random import randint, choice
 from scripts.player import Player
 from scripts.enemies import Enemy
+from scripts.enemies import enemy_projectiles
 from scripts.powerups import PowerUp
 from scripts.projectile import Projectile
 
@@ -16,6 +17,7 @@ background = pygame.image.load(
 window_icon = pygame.image.load("sprites/player/player@2x.png").convert_alpha()
 pygame.display.set_icon(window_icon)
 
+# So we don't have to load the audio file everytime we spawn an enemy
 dmg_sound = pygame.mixer.Sound("audio/damage.wav")
 dmg_sound.set_volume(0.2)
 
@@ -47,8 +49,13 @@ bad_orbs_timer = pygame.USEREVENT + 7
 player_damage_cooldown = pygame.USEREVENT + 8
 player_damage_immunity = False
 
+# For orb spawning
+x_positions = (50, 100, 150, 200, 250, 300, 350, 400,
+               450, 500, 550, 600, 650, 700, 750)
+
 # ---------- For Testing Purposes ----------
 pygame.time.set_timer(enemy_spawn_timer, 1500)
+pygame.time.set_timer(powerup_spawn_timer, 1000)
 pygame.time.set_timer(score_timer, 1000)
 pygame.time.set_timer(bad_orbs_timer, 1000)
 player.add(Player())
@@ -57,16 +64,18 @@ player.add(Player())
 
 def check_collisions():
     global score_points, player_damage_immunity
+
     if player.sprite:
         enemy_collision = pygame.sprite.spritecollide(
             player.sprite, enemies, False)
-        red_projectile_collision = pygame.sprite.spritecollide(
+        rp_collision = pygame.sprite.spritecollide(
             player.sprite, red_projectiles, True)
-        if not player_damage_immunity and (enemy_collision or red_projectile_collision):
-            dmg_sound.play()
+        ep_collision = pygame.sprite.spritecollide(
+            player.sprite, enemy_projectiles, True)
+        if not player_damage_immunity and (enemy_collision or rp_collision or ep_collision):
             player.sprite.damaged()
             player_damage_immunity = True
-            pygame.time.set_timer(player_damage_cooldown, 500)
+            pygame.time.set_timer(player_damage_cooldown, 1000)
 
     enemies_shot = pygame.sprite.groupcollide(
         enemies, player_projectiles, False, True)
@@ -117,9 +126,6 @@ while True:
             pass
 
         if event.type == bad_orbs_timer:
-            print("orb spawn")
-            x_positions = (50, 100, 150, 200, 250, 300, 350, 400,
-                           450, 500, 550, 600, 650, 700, 750)
             red_projectiles.add(Projectile(
                 "sky", choice(x_positions), -20, ""))
 
@@ -127,8 +133,14 @@ while True:
 
     window.blit(ui.score(score_points), (20, 15))
 
+    if player.sprite:
+        window.blit(ui.player_health(player.sprite.health), (20, 55))
+
     player_projectiles.update()
     player_projectiles.draw(window)
+
+    enemy_projectiles.update()
+    enemy_projectiles.draw(window)
 
     red_projectiles.update()
     red_projectiles.draw(window)

@@ -36,6 +36,8 @@ class Projectile(pygame.sprite.Sprite):
         self.rect = self.image.get_rect(center=(x_pos + 4, y_pos + 7.5))
 
         self.frames = tuple(map(scale, self.frames))
+        # I placed it after calling the rect function so I can make the
+        # projectile collision smaller
 
     def movement(self):
         if self.origin != "sky":

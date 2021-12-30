@@ -7,7 +7,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__()
         self.health = 3
         self.speed = 5
-        self.jump_force = -15
+        self.jump_force = -17
 
         self.image = pygame.image.load(
             "sprites/player/player.png").convert_alpha()
@@ -34,7 +34,8 @@ class Player(pygame.sprite.Sprite):
         pass
 
     def damaged(self):
-        pass
+        self.dmg_sound.play()
+        self.health -= 1
 
     def movement(self):
         key = pygame.key.get_pressed()
