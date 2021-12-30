@@ -30,7 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.cast_sound.set_volume(0.2)
         self.jump_sound.set_volume(0.1)
 
-    def damage_cooldown(self):
+    def mutated_state(self):
         pass
 
     def damaged(self):

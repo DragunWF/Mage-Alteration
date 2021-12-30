@@ -5,7 +5,7 @@ from random import choice
 class PowerUp(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        powerup_types = ("health", "speed", "backshot", "superJump")
+        powerup_types = ("health", "speed", "backShot", "superJump")
         x_positions = (50, 100, 150, 200, 250, 300, 350, 400,
                        450, 500, 550, 600, 650, 700, 750)
         self.powerup = choice(powerup_types)

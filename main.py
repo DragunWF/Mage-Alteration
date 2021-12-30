@@ -135,6 +135,8 @@ while True:
 
     if player.sprite:
         window.blit(ui.player_health(player.sprite.health), (20, 55))
+    else:
+        window.blit(ui.player_health(0, (20, 55)))
 
     player_projectiles.update()
     player_projectiles.draw(window)
