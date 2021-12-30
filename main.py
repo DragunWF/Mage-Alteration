@@ -120,7 +120,7 @@ while True:
             enemies.add(Enemy())
 
         if event.type == powerup_spawn_timer:
-            pass
+            powerups.add(PowerUp())
 
         if event.type == scaling_difficulty_timer:
             pass

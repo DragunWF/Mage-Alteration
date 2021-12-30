@@ -11,11 +11,12 @@ class PowerUp(pygame.sprite.Sprite):
         self.powerup = choice(powerup_types)
 
         self.image = pygame.image.load(f"sprites/powerups/{self.powerup}.png")
-        self.image = pygame.transform.scale(self.image, (64, 64))
-        self.rect = self.image.get_rect(center=(choice(x_positions, -20)))
+        self.image = pygame.transform.scale(self.image, (32, 32))
+        self.rect = self.image.get_rect(center=(choice(x_positions), -20))
 
     def visibility_check(self):
         if self.rect.y >= 425:
+            print("delete powerup")
             self.kill()
 
     def movement(self):
