@@ -26,12 +26,10 @@ class Enemy(pygame.sprite.Sprite):
         self.direction = "left" if position_x == 820 else "right"
         self.gravity = 0
 
-        self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
-
-        self.dmg_sound.set_volume(0.2)
+    def knockback_state(self):
+        pass
 
     def damaged(self):
-        self.dmg_sound.play()
         self.health -= 1
         if self.health < 1:
             self.kill()

@@ -38,19 +38,23 @@ class Projectile(pygame.sprite.Sprite):
         self.frames = tuple(map(scale, self.frames))
 
     def movement(self):
-        self.rect.x += 8.5 if self.direction == "right" else -8.5
+        if self.origin != "sky":
+            self.rect.x += 8.5 if self.direction == "right" else -8.5
+        else:
+            self.rect.y += 5
 
     def animate(self):
         if self.index >= len(self.frames) - 1:
             self.index = 0
-        self.index += 0.4
+        self.index += 0.25
         self.image = self.frames[int(self.index)]
 
-    def visibility_check(self):
-        if self.rect.x >= 825 or self.rect.x <= -35 or self.rect.y >= 352:
+    def delete_conditions(self):
+        if self.rect.x >= 825 or self.rect.x <= -35 or self.rect.y >= 425:
+            print("delete projectile")
             self.kill()
 
     def update(self):
         self.movement()
         self.animate()
-        self.visibility_check()
+        self.delete_conditions()

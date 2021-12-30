@@ -20,6 +20,7 @@ class Player(pygame.sprite.Sprite):
 
         self.gravity = 0
         self.spell_cooldown = 0
+        self.mutations = []
 
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
         self.cast_sound = pygame.mixer.Sound("audio/cast.ogg")
@@ -27,7 +28,10 @@ class Player(pygame.sprite.Sprite):
 
         self.dmg_sound.set_volume(0.2)
         self.cast_sound.set_volume(0.2)
-        self.jump_sound.set_volume(0.5)
+        self.jump_sound.set_volume(0.1)
+
+    def damage_cooldown(self):
+        pass
 
     def damaged(self):
         pass
@@ -36,6 +40,7 @@ class Player(pygame.sprite.Sprite):
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE] and self.rect.bottom >= 352:
             self.gravity = self.jump_force
+            self.jump_sound.play()
         if key[pygame.K_d]:
             self.rect.x += self.speed
             self.image = self.default_img
