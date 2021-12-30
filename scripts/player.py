@@ -20,6 +20,10 @@ class Player(pygame.sprite.Sprite):
 
         self.gravity = 0
         self.spell_cooldown = 0
+
+        self.speed_time, self.speed_mutated = 0, False
+        self.super_jump_time, self.jump_mutated = 0, False
+        self.back_shot_time, self.cast_mutated = 0, False
         self.mutations = []
 
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
@@ -33,13 +37,56 @@ class Player(pygame.sprite.Sprite):
         self.pick_up_sound.set_volume(0.5)
 
     def mutated_state(self):
-        pass
+        if self.speed_mutated:
+            self.speed_time += 1
+            self.speed = 10
+            if self.speed_time >= 60 * 15:
+                self.speed_mutated = False
+                self.speed = 5
+                self.speed_time = 0
+                self.mutations.pop(self.mutations.index("Speed"))
+
+        if self.jump_mutated:
+            self.super_jump_time += 1
+            self.jump_force = -25
+            if self.super_jump_time >= 60 * 20:
+                self.jump_mutated = False
+                self.jump_force = -17
+                self.super_jump_time = 0
+                self.mutations.pop(
+                    self.mutations.index("Increased Jump Height"))
+
+        if self.cast_mutated:
+            self.back_shot_time += 1
+            # Add code here for the rear casting logic
+            if self.back_shot_time >= 60 * 10:
+                self.back_shot_mutated = False
+                self.back_shot_time = 0
+                self.mutations.pop(self.mutations.index("Rear Casting"))
 
     def powerup_pickup(self, powerup):
+        self.pick_up_sound.play()
+
         if powerup == "health":
-            self.pick_up_sound.play()
             self.health += 1
-            return
+
+        if powerup == "speed":
+            self.speed_mutated = True
+            self.speed_time = 0
+            if "Speed" not in self.mutations:
+                self.mutations.append("Speed")
+
+        if powerup == "superJump":
+            self.jump_mutated = True
+            self.super_jump_time = 0
+            if "Increased Jump Height" not in self.mutations:
+                self.mutations.append("Increased Jump Height")
+
+        if powerup == "backShot":
+            self.cast_mutated = True
+            self.back_shot_time = 0
+            if "Rear Casting" not in self.mutations:
+                self.mutations.append("Rear Casting")
 
     def damaged(self):
         self.dmg_sound.play()
@@ -70,5 +117,7 @@ class Player(pygame.sprite.Sprite):
             self.kill()
 
     def update(self):
+        if self.speed_mutated or self.jump_mutated or self.cast_mutated:
+            self.mutated_state()
         self.apply_gravity()
         self.movement()
