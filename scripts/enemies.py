@@ -16,14 +16,23 @@ class Enemy(pygame.sprite.Sprite):
         for enemy in enemy_types:
             if self.color == enemy:
                 self.image = pygame.image.load(f"sprites/enemies/{enemy}.png")
+                dmg_frame = pygame.image.load(
+                    f"sprites/enemies/{enemy}_dmg.png")
                 break
 
         right = self.image
         left = pygame.transform.flip(self.image, True, False)
+        right_dmg = dmg_frame
+        left_dmg = pygame.transform.flip(dmg_frame, True, False)
 
         self.image = right if position_x == -20 else left
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(center=(position_x, 340))
+        dmg_frame = right_dmg if position_x == -20 else left_dmg
+        dmg_frame = pygame.transform.scale(dmg_frame, (64, 64))
+
+        self.frames = (self.image, dmg_frame, dmg_frame, dmg_frame)
+        self.index = 0
 
         self.health = 2
         self.speed = 4 if position_x == -20 else -4
@@ -36,9 +45,11 @@ class Enemy(pygame.sprite.Sprite):
 
     def knockback_state(self):
         self.knockout_time += 1
+        self.animate_damaged()
         if self.knockout_time >= 90:
             self.knockout_time = 0
             self.knockbacked = False
+            self.image = self.frames[0]
 
     def cast_spell(self):
         global enemy_projectiles
@@ -47,10 +58,17 @@ class Enemy(pygame.sprite.Sprite):
             enemy_projectiles.add(Projectile("enemy", self.rect.x,
                                              self.rect.y, self.direction))
 
+    def animate_damaged(self):
+        self.index += 0.2
+        self.image = self.frames[int(self.index)]
+        if self.index >= len(self.frames) - 1:
+            self.index = 0
+
     def damaged(self):
         self.health -= 1
         # self.rect.x += -15 if self.direction == "right" else 15
         self.knockbacked = True
+        self.is_damaged = True
         if self.health < 1:
             self.kill()
 

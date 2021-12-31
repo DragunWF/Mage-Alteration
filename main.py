@@ -54,8 +54,8 @@ x_positions = (50, 100, 150, 200, 250, 300, 350, 400,
                450, 500, 550, 600, 650, 700, 750)
 
 # ---------- For Testing Purposes ----------
-pygame.time.set_timer(enemy_spawn_timer, 1500)
-pygame.time.set_timer(powerup_spawn_timer, 1000)
+pygame.time.set_timer(enemy_spawn_timer, 15000)
+pygame.time.set_timer(powerup_spawn_timer, 10000)
 pygame.time.set_timer(score_timer, 1000)
 pygame.time.set_timer(bad_orbs_timer, 1000)
 player.add(Player())

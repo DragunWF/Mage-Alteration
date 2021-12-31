@@ -14,9 +14,22 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(self.image, (64, 64))
         self.rect = self.image.get_rect(center=(400, -50))
 
+        dmg_img = pygame.image.load("sprites/player/player_dmg.png")
+        dmg_img = pygame.transform.scale(dmg_img, (64, 64))
+        self.frames_right = (self.image, dmg_img, dmg_img)
+
+        def scale(image):
+            return pygame.transform.flip(image, True, False)
+
+        self.frames_left = tuple(map(scale, self.frames_right))
+        self.index = 0
+
         self.default_img = self.image
         self.flipped_img = pygame.transform.flip(self.image, True, False)
         self.direction = "right"
+
+        self.damaged_time = 0
+        self.is_damaged = False
 
         self.gravity = 0
         self.spell_cooldown = 0
@@ -35,6 +48,36 @@ class Player(pygame.sprite.Sprite):
         self.cast_sound.set_volume(0.2)
         self.jump_sound.set_volume(0.1)
         self.pick_up_sound.set_volume(0.5)
+
+    def animate_damaged(self):
+        self.index += 0.2
+        if self.direction == "right":
+            self.image = self.frames_right[int(self.index)]
+        else:
+            self.image = self.frames_left[int(self.index)]
+        if self.index >= len(self.frames_right) - 1:
+            self.index = 0
+
+    def damaged_state(self):
+        self.damaged_time += 1
+        if self.damaged_time >= 60:
+            self.damaged_time = 0
+            self.is_damaged = False
+
+    def damaged(self):
+        self.dmg_sound.play()
+        self.health -= 1
+        self.is_damaged = True
+
+    def animate(self):
+        if not self.is_damaged:
+            if self.direction == "right":
+                self.image = self.default_img
+            else:
+                self.image = self.flipped_img
+        else:
+            self.animate_damaged()
+            self.damaged_state()
 
     def mutated_state(self):
         if self.speed_mutated:
@@ -87,10 +130,6 @@ class Player(pygame.sprite.Sprite):
             if "Rear Casting" not in self.mutations:
                 self.mutations.append("Rear Casting")
 
-    def damaged(self):
-        self.dmg_sound.play()
-        self.health -= 1
-
     def movement(self):
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE] and self.rect.bottom >= 352:
@@ -98,11 +137,11 @@ class Player(pygame.sprite.Sprite):
             self.jump_sound.play()
         if key[pygame.K_d]:
             self.rect.x += self.speed
-            self.image = self.default_img
+            # self.image = self.default_img
             self.direction = "right"
         elif key[pygame.K_a]:
             self.rect.x -= self.speed
-            self.image = self.flipped_img
+            # self.image = self.flipped_img
             self.direction = "left"
 
     def apply_gravity(self):
@@ -116,8 +155,8 @@ class Player(pygame.sprite.Sprite):
             self.kill()
 
     def update(self):
-        print(self.mutations)
         if self.speed_mutated or self.jump_mutated or self.cast_mutated:
             self.mutated_state()
         self.apply_gravity()
         self.movement()
+        self.animate()

@@ -29,6 +29,10 @@ class Mutations:
         return game_text.render(powerups[2], (0, 0), light_cyan)
 
 
+class StartMenu:
+    pass
+
+
 def player_health(hp_value):
     return game_text.render(f"Health: {hp_value}", (0, 0), light_cyan)
 
