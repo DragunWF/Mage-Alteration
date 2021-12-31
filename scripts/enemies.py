@@ -31,7 +31,7 @@ class Enemy(pygame.sprite.Sprite):
         dmg_frame = right_dmg if position_x == -20 else left_dmg
         dmg_frame = pygame.transform.scale(dmg_frame, (64, 64))
 
-        self.frames = (self.image, dmg_frame, dmg_frame, dmg_frame)
+        self.frames = (self.image, dmg_frame, dmg_frame)
         self.index = 0
 
         self.health = 2

@@ -54,11 +54,11 @@ x_positions = (50, 100, 150, 200, 250, 300, 350, 400,
                450, 500, 550, 600, 650, 700, 750)
 
 # ---------- For Testing Purposes ----------
-pygame.time.set_timer(enemy_spawn_timer, 15000)
+pygame.time.set_timer(enemy_spawn_timer, 2500)
 pygame.time.set_timer(powerup_spawn_timer, 10000)
 pygame.time.set_timer(score_timer, 1000)
 pygame.time.set_timer(bad_orbs_timer, 1000)
-player.add(Player())
+# player.add(Player())
 # ------------------------------------------
 
 
@@ -66,6 +66,12 @@ def check_collisions():
     global score_points, player_damage_immunity
 
     if player.sprite:
+        pwr_collision = pygame.sprite.spritecollide(
+            player.sprite, powerups, False)
+        for powerup in pwr_collision:
+            player.sprite.powerup_pickup(powerup.powerup)
+            powerup.kill()
+
         enemy_collision = pygame.sprite.spritecollide(
             player.sprite, enemies, False)
         rp_collision = pygame.sprite.spritecollide(
@@ -77,12 +83,6 @@ def check_collisions():
             player_damage_immunity = True
             pygame.time.set_timer(player_damage_cooldown, 1000)
 
-        pwr_collision = pygame.sprite.spritecollide(
-            player.sprite, powerups, False)
-        for powerup in pwr_collision:
-            player.sprite.powerup_pickup(powerup.powerup)
-            powerup.kill()
-
     enemies_shot = pygame.sprite.groupcollide(
         enemies, player_projectiles, False, True)
     for enemy in enemies_shot:
@@ -91,8 +91,11 @@ def check_collisions():
         enemy.damaged()
 
 
-def main_menu():
-    pass
+def ui_start_menu():
+    global score_points
+    window.blit(*ui.StartMenu.title())
+    window.blit(*ui.StartMenu.score(score_points))
+    window.blit(*ui.StartMenu.play())
 
 
 def ui_game_text():
@@ -113,52 +116,61 @@ def ui_game_text():
         window.blit(listings[2](player.sprite.mutations), (210, 135))
 
 
+def scale_difficulty():
+    pass
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
             exit()
 
-        # Player Events
-        if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown:
-            player.sprite.cast_sound.play()
-            player_projectiles.add(Projectile(
-                "player", player.sprite.rect.x,
-                player.sprite.rect.y, player.sprite.direction))
-
-            if player.sprite.cast_mutated:
-                other_direction = "right" if player.sprite.direction == "left" else "left"
+        if game_started:
+            # Player Events
+            if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown:
+                player.sprite.cast_sound.play()
                 player_projectiles.add(Projectile(
                     "player", player.sprite.rect.x,
-                    player.sprite.rect.y, other_direction))
+                    player.sprite.rect.y, player.sprite.direction))
 
-            cast_on_cooldown = True
-            pygame.time.set_timer(player_cast_cooldown, 250)
+                if player.sprite.cast_mutated:
+                    other_direction = "right" if player.sprite.direction == "left" else "left"
+                    player_projectiles.add(Projectile(
+                        "player", player.sprite.rect.x,
+                        player.sprite.rect.y, other_direction))
 
-        if event.type == player_cast_cooldown:
-            cast_on_cooldown = False
-            pygame.time.set_timer(player_cast_cooldown, 0)
+                cast_on_cooldown = True
+                pygame.time.set_timer(player_cast_cooldown, 250)
 
-        if event.type == player_damage_cooldown:
-            player_damage_immunity = False
-            pygame.time.set_timer(player_damage_cooldown, 0)
+            if event.type == player_cast_cooldown:
+                cast_on_cooldown = False
+                pygame.time.set_timer(player_cast_cooldown, 0)
 
-        # Main Events
-        if event.type == score_timer and player.sprite:
-            score_points += 1
+            if event.type == player_damage_cooldown:
+                player_damage_immunity = False
+                pygame.time.set_timer(player_damage_cooldown, 0)
 
-        if event.type == enemy_spawn_timer:
-            enemies.add(Enemy())
+            # Main Events
+            if event.type == score_timer and player.sprite:
+                score_points += 1
 
-        if event.type == powerup_spawn_timer:
-            powerups.add(PowerUp())
+            if event.type == enemy_spawn_timer:
+                enemies.add(Enemy())
 
-        if event.type == scaling_difficulty_timer:
-            pass
+            if event.type == powerup_spawn_timer:
+                powerups.add(PowerUp())
 
-        if event.type == bad_orbs_timer:
-            red_projectiles.add(Projectile(
-                "sky", choice(x_positions), -20, ""))
+            if event.type == scaling_difficulty_timer:
+                pass
+
+            if event.type == bad_orbs_timer:
+                red_projectiles.add(Projectile(
+                    "sky", choice(x_positions), -20, ""))
+        else:
+            if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
+                game_started = True
+                player.add(Player())
 
     window.blit(background, (0, 0))
 
@@ -181,7 +193,14 @@ while True:
     powerups.draw(window)
 
     check_collisions()
-    ui_game_text()
+
+    if player.sprite:
+        ui_game_text()
+    else:
+        game_started = False
+
+    if not game_started:
+        ui_start_menu()
 
     pygame.display.update()
     clock.tick(60)

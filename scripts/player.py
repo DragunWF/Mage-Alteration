@@ -68,6 +68,8 @@ class Player(pygame.sprite.Sprite):
         self.dmg_sound.play()
         self.health -= 1
         self.is_damaged = True
+        if self.health < 1:
+            self.kill()
 
     def animate(self):
         if not self.is_damaged:
