@@ -97,10 +97,20 @@ def main_menu():
 
 def ui_game_text():
     window.blit(ui.score(score_points), (20, 15))
-    if player.sprite:
-        window.blit(ui.player_health(player.sprite.health), (20, 55))
-    else:
-        window.blit(ui.player_health(0, (20, 55)))
+    health_display = player.sprite.health if player.sprite else 0
+    window.blit(ui.player_health(health_display), (20, 55))
+
+    listings = (ui.Mutations.listing_one, ui.Mutations.listing_two,
+                ui.Mutations.listing_three)
+    window.blit(ui.Mutations.mutations(), (210, 15))
+    if not player.sprite.mutations:
+        window.blit(ui.Mutations.no_listings(), (210, 55))
+    if len(player.sprite.mutations) >= 1:
+        window.blit(listings[0](player.sprite.mutations), (210, 55))
+    if len(player.sprite.mutations) >= 2:
+        window.blit(listings[1](player.sprite.mutations), (210, 95))
+    if len(player.sprite.mutations) >= 3:
+        window.blit(listings[2](player.sprite.mutations), (210, 135))
 
 
 while True:
@@ -152,8 +162,6 @@ while True:
 
     window.blit(background, (0, 0))
 
-    ui_game_text()
-
     player_projectiles.update()
     player_projectiles.draw(window)
 
@@ -173,6 +181,7 @@ while True:
     powerups.draw(window)
 
     check_collisions()
+    ui_game_text()
 
     pygame.display.update()
     clock.tick(60)

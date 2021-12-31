@@ -44,7 +44,7 @@ class Player(pygame.sprite.Sprite):
                 self.speed_mutated = False
                 self.speed = 5
                 self.speed_time = 0
-                self.mutations.pop(self.mutations.index("Speed"))
+                self.mutations.pop(self.mutations.index("+Speed"))
 
         if self.jump_mutated:
             self.super_jump_time += 1
@@ -54,12 +54,11 @@ class Player(pygame.sprite.Sprite):
                 self.jump_force = -17
                 self.super_jump_time = 0
                 self.mutations.pop(
-                    self.mutations.index("Increased Jump Height"))
+                    self.mutations.index("+Jump Height"))
 
         if self.cast_mutated:
             self.rear_casting_time += 1
-            # Add code here for the rear casting logic
-            if self.rear_casting_time >= 60 * 10:
+            if self.rear_casting_time >= 60 * 5:
                 self.cast_mutated = False
                 self.rear_casting_time = 0
                 self.mutations.pop(self.mutations.index("Rear Casting"))
@@ -73,14 +72,14 @@ class Player(pygame.sprite.Sprite):
         if powerup == "speed":
             self.speed_mutated = True
             self.speed_time = 0
-            if "Speed" not in self.mutations:
-                self.mutations.append("Speed")
+            if "+Speed" not in self.mutations:
+                self.mutations.append("+Speed")
 
         if powerup == "superJump":
             self.jump_mutated = True
             self.super_jump_time = 0
-            if "Increased Jump Height" not in self.mutations:
-                self.mutations.append("Increased Jump Height")
+            if "+Jump Height" not in self.mutations:
+                self.mutations.append("+Jump Height")
 
         if powerup == "backShot":
             self.cast_mutated = True

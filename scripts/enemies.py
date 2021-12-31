@@ -49,7 +49,7 @@ class Enemy(pygame.sprite.Sprite):
 
     def damaged(self):
         self.health -= 1
-        self.rect.x += -15 if self.direction == "right" else 15
+        # self.rect.x += -15 if self.direction == "right" else 15
         self.knockbacked = True
         if self.health < 1:
             self.kill()
