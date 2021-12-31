@@ -23,7 +23,7 @@ class Player(pygame.sprite.Sprite):
 
         self.speed_time, self.speed_mutated = 0, False
         self.super_jump_time, self.jump_mutated = 0, False
-        self.back_shot_time, self.cast_mutated = 0, False
+        self.rear_casting_time, self.cast_mutated = 0, False
         self.mutations = []
 
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
@@ -48,7 +48,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.jump_mutated:
             self.super_jump_time += 1
-            self.jump_force = -25
+            self.jump_force = -22
             if self.super_jump_time >= 60 * 20:
                 self.jump_mutated = False
                 self.jump_force = -17
@@ -57,11 +57,11 @@ class Player(pygame.sprite.Sprite):
                     self.mutations.index("Increased Jump Height"))
 
         if self.cast_mutated:
-            self.back_shot_time += 1
+            self.rear_casting_time += 1
             # Add code here for the rear casting logic
-            if self.back_shot_time >= 60 * 10:
-                self.back_shot_mutated = False
-                self.back_shot_time = 0
+            if self.rear_casting_time >= 60 * 10:
+                self.cast_mutated = False
+                self.rear_casting_time = 0
                 self.mutations.pop(self.mutations.index("Rear Casting"))
 
     def powerup_pickup(self, powerup):
@@ -84,7 +84,7 @@ class Player(pygame.sprite.Sprite):
 
         if powerup == "backShot":
             self.cast_mutated = True
-            self.back_shot_time = 0
+            self.rear_casting_time = 0
             if "Rear Casting" not in self.mutations:
                 self.mutations.append("Rear Casting")
 
@@ -117,6 +117,7 @@ class Player(pygame.sprite.Sprite):
             self.kill()
 
     def update(self):
+        print(self.mutations)
         if self.speed_mutated or self.jump_mutated or self.cast_mutated:
             self.mutated_state()
         self.apply_gravity()

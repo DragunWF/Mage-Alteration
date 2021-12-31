@@ -95,6 +95,14 @@ def main_menu():
     pass
 
 
+def ui_game_text():
+    window.blit(ui.score(score_points), (20, 15))
+    if player.sprite:
+        window.blit(ui.player_health(player.sprite.health), (20, 55))
+    else:
+        window.blit(ui.player_health(0, (20, 55)))
+
+
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
@@ -107,6 +115,13 @@ while True:
             player_projectiles.add(Projectile(
                 "player", player.sprite.rect.x,
                 player.sprite.rect.y, player.sprite.direction))
+
+            if player.sprite.cast_mutated:
+                other_direction = "right" if player.sprite.direction == "left" else "left"
+                player_projectiles.add(Projectile(
+                    "player", player.sprite.rect.x,
+                    player.sprite.rect.y, other_direction))
+
             cast_on_cooldown = True
             pygame.time.set_timer(player_cast_cooldown, 250)
 
@@ -137,12 +152,7 @@ while True:
 
     window.blit(background, (0, 0))
 
-    window.blit(ui.score(score_points), (20, 15))
-
-    if player.sprite:
-        window.blit(ui.player_health(player.sprite.health), (20, 55))
-    else:
-        window.blit(ui.player_health(0, (20, 55)))
+    ui_game_text()
 
     player_projectiles.update()
     player_projectiles.draw(window)
