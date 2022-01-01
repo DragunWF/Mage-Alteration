@@ -126,14 +126,13 @@ def ui_game_text():
 def scale_difficulty():
     global difficulty_level
     if difficulty_level >= 1:
-        multiplier = difficulty_level if difficulty_level != 1 else 1.5
-        factor = 1500 if difficulty_level >= 4 else 50
-        factor_x = 50 if difficulty_level >= 3 else 0
-        print(f"{difficulty_level} - {multiplier}")
+        multiplier = difficulty_level if difficulty_level != 1 else 1.25
+        factor_x = 75 if difficulty_level >= 3 else 0
+        factor_y = 1500 if difficulty_level >= 4 else 50
         pygame.time.set_timer(
-            enemy_spawn_timer, floor(1350 * multiplier - factor))
+            enemy_spawn_timer, floor(1350 * multiplier - factor_y))
         pygame.time.set_timer(powerup_spawn_timer,
-                              floor(2150 * multiplier - factor))
+                              floor(2150 * multiplier - factor_y))
         pygame.time.set_timer(red_orbs_timer, floor(
             225 * multiplier - factor_x))
         difficulty_level -= 1
@@ -183,7 +182,7 @@ while True:
                         player.sprite.rect.y, other_direction))
 
                 cast_on_cooldown = True
-                pygame.time.set_timer(player_cast_cooldown, 150)
+                pygame.time.set_timer(player_cast_cooldown, 175)
 
             if event.type == player_cast_cooldown:
                 cast_on_cooldown = False
