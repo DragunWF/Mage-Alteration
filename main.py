@@ -82,6 +82,10 @@ def check_collisions():
     for enemy in enemies_shot:
         score_points += 3
         dmg_sound.play()
+
+        dmg_check = 1 if not player.sprite.dmg_mutated else 2
+        score_points += 6 if enemy.health - dmg_check <= 0 else 0
+
         enemy.damaged(player.sprite.dmg_mutated)
 
     player.sprite.visibility_check()
