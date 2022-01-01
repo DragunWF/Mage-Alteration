@@ -84,6 +84,8 @@ def check_collisions():
         dmg_sound.play()
         enemy.damaged(player.sprite.dmg_mutated)
 
+    player.sprite.visibility_check()
+
     if not player.sprite:
         pygame.time.set_timer(game_end_delay, 1500)
 

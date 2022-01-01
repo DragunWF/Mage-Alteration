@@ -167,7 +167,7 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = 352
 
     def visibility_check(self):
-        if self.rect.x >= 825 or self.rect.x <= -25:
+        if self.rect.x >= 825 or self.rect.x <= -65:
             self.lose_sound.play()
             self.kill()
 
@@ -176,5 +176,4 @@ class Player(pygame.sprite.Sprite):
             self.mutated_state()
         self.apply_gravity()
         self.movement()
-        self.visibility_check()
         self.animate()
