@@ -1,11 +1,10 @@
 import pygame
-from math import floor
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.health = 3
+        self.health = 5
         self.speed = 5
         self.jump_force = -17
 
@@ -37,6 +36,7 @@ class Player(pygame.sprite.Sprite):
         self.speed_time, self.speed_mutated = 0, False
         self.super_jump_time, self.jump_mutated = 0, False
         self.rear_casting_time, self.cast_mutated = 0, False
+        self.double_dmg_time, self.dmg_mutated = 0, False
         self.mutations = []
 
         self.dmg_sound = pygame.mixer.Sound("audio/damage.wav")
@@ -84,7 +84,7 @@ class Player(pygame.sprite.Sprite):
     def mutated_state(self):
         if self.speed_mutated:
             self.speed_time += 1
-            self.speed = 10
+            self.speed = 8
             if self.speed_time >= 60 * 15:
                 self.speed_mutated = False
                 self.speed = 5
@@ -93,7 +93,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.jump_mutated:
             self.super_jump_time += 1
-            self.jump_force = -22
+            self.jump_force = -21
             if self.super_jump_time >= 60 * 20:
                 self.jump_mutated = False
                 self.jump_force = -17
@@ -107,6 +107,13 @@ class Player(pygame.sprite.Sprite):
                 self.cast_mutated = False
                 self.rear_casting_time = 0
                 self.mutations.pop(self.mutations.index("Rear Casting"))
+
+        if self.dmg_mutated:
+            self.double_dmg_time += 1
+            if self.double_dmg_time >= 60 * 5:
+                self.dmg_mutated = False
+                self.double_dmg_time = 0
+                self.mutations.pop(self.mutations.index("Double Damage"))
 
     def powerup_pickup(self, powerup):
         self.pick_up_sound.play()
@@ -132,6 +139,12 @@ class Player(pygame.sprite.Sprite):
             if "Rear Casting" not in self.mutations:
                 self.mutations.append("Rear Casting")
 
+        if powerup == "doubleDmg":
+            self.dmg_mutated = True
+            self.double_dmg_time = 0
+            if "Double Damage" not in self.mutations:
+                self.mutations.append("Double Damage")
+
     def movement(self):
         key = pygame.key.get_pressed()
         if key[pygame.K_SPACE] and self.rect.bottom >= 352:
@@ -139,11 +152,9 @@ class Player(pygame.sprite.Sprite):
             self.jump_sound.play()
         if key[pygame.K_d]:
             self.rect.x += self.speed
-            # self.image = self.default_img
             self.direction = "right"
         elif key[pygame.K_a]:
             self.rect.x -= self.speed
-            # self.image = self.flipped_img
             self.direction = "left"
 
     def apply_gravity(self):

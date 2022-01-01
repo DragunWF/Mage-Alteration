@@ -1,7 +1,6 @@
 import pygame
-import math
 from .projectile import Projectile
-from random import randint, choice
+from random import choice
 
 enemy_projectiles = pygame.sprite.Group()
 
@@ -43,6 +42,9 @@ class Enemy(pygame.sprite.Sprite):
         self.knockout_time = 0
         self.knockbacked = False
 
+        self.cast_sound = pygame.mixer.Sound("audio/enemyCast.ogg")
+        self.cast_sound.set_volume(0.2)
+
     def knockback_state(self):
         self.knockout_time += 1
         self.animate_damaged()
@@ -55,6 +57,7 @@ class Enemy(pygame.sprite.Sprite):
         global enemy_projectiles
         self.cast_time += 1
         if self.cast_time % 60 == 0:
+            self.cast_sound.play()
             enemy_projectiles.add(Projectile("enemy", self.rect.x,
                                              self.rect.y, self.direction))
 

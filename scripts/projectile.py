@@ -53,7 +53,6 @@ class Projectile(pygame.sprite.Sprite):
 
     def delete_conditions(self):
         if self.rect.x >= 825 or self.rect.x <= -35 or self.rect.y >= 425:
-            print("delete projectile")
             self.kill()
 
     def update(self):

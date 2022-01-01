@@ -5,7 +5,6 @@ pygame.init()
 font = "fonts/kenneyPixel.ttf"
 font_sizes = (25, 50, 75, 100)
 
-# mutation_text = pygame.font.Font(font, font_sizes[0], bold=True)
 game_text = pygame.font.Font(font, font_sizes[1], bold=True)
 title_text = pygame.font.Font(font, font_sizes[3], bold=True)
 
@@ -28,6 +27,9 @@ class Mutations:
     def listing_three(powerups):
         return game_text.render(powerups[2], True, light_cyan)
 
+    def listing_four(powerups):
+        return game_text.render(powerups[3], True, light_cyan)
+
 
 class StartMenu:
     def title():
@@ -46,9 +48,9 @@ class StartMenu:
         return text, rect
 
 
-def player_health(hp_value):
-    return game_text.render(f"Health: {hp_value}", True, light_cyan)
+class GameUI:
+    def player_health(hp_value):
+        return game_text.render(f"Health: {hp_value}", True, light_cyan)
 
-
-def score(score):
-    return game_text.render(f"Score: {score}", True, light_cyan)
+    def score(score):
+        return game_text.render(f"Score: {score}", True, light_cyan)

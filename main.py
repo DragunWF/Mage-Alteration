@@ -1,7 +1,7 @@
 import pygame
 import scripts.ui_elements as ui
 from sys import exit
-from random import randint, choice
+from random import choice
 from scripts.player import Player
 from scripts.enemies import Enemy
 from scripts.enemies import enemy_projectiles
@@ -14,6 +14,7 @@ clock = pygame.time.Clock()
 background = pygame.image.load(
     "sprites/environment/background.png").convert_alpha()
 
+pygame.display.set_caption("Mage Alteration")
 window_icon = pygame.image.load("sprites/player/player@2x.png").convert_alpha()
 pygame.display.set_icon(window_icon)
 
@@ -37,7 +38,7 @@ blue_projectiles = pygame.sprite.Group()
 
 player_damage_cooldown = pygame.USEREVENT + 1
 powerup_spawn_timer = pygame.USEREVENT + 2
-scaling_difficulty_timer = pygame.USEREVENT + 3
+scaling_timer = pygame.USEREVENT + 3
 enemy_spawn_timer = pygame.USEREVENT + 4
 
 player_cast_cooldown = pygame.USEREVENT + 5
@@ -49,17 +50,11 @@ bad_orbs_timer = pygame.USEREVENT + 7
 player_damage_cooldown = pygame.USEREVENT + 8
 player_damage_immunity = False
 
+game_start_delay = pygame.USEREVENT + 9
+
 # For orb spawning
 x_positions = (50, 100, 150, 200, 250, 300, 350, 400,
                450, 500, 550, 600, 650, 700, 750)
-
-# ---------- For Testing Purposes ----------
-pygame.time.set_timer(enemy_spawn_timer, 2500)
-pygame.time.set_timer(powerup_spawn_timer, 10000)
-pygame.time.set_timer(score_timer, 1000)
-pygame.time.set_timer(bad_orbs_timer, 1000)
-# player.add(Player())
-# ------------------------------------------
 
 
 def check_collisions():
@@ -99,13 +94,14 @@ def ui_start_menu():
 
 
 def ui_game_text():
-    window.blit(ui.score(score_points), (20, 15))
+    window.blit(ui.GameUI.score(score_points), (20, 15))
     health_display = player.sprite.health if player.sprite else 0
-    window.blit(ui.player_health(health_display), (20, 55))
+    window.blit(ui.GameUI.player_health(health_display), (20, 55))
 
     listings = (ui.Mutations.listing_one, ui.Mutations.listing_two,
-                ui.Mutations.listing_three)
+                ui.Mutations.listing_three, ui.Mutations.listing_four)
     window.blit(ui.Mutations.mutations(), (210, 15))
+
     if not player.sprite.mutations:
         window.blit(ui.Mutations.no_listings(), (210, 55))
     if len(player.sprite.mutations) >= 1:
@@ -114,10 +110,26 @@ def ui_game_text():
         window.blit(listings[1](player.sprite.mutations), (210, 95))
     if len(player.sprite.mutations) >= 3:
         window.blit(listings[2](player.sprite.mutations), (210, 135))
+    if len(player.sprite.mutations) >= 4:
+        window.blit(listings[3](player.sprite.mutations), (210, 175))
 
 
 def scale_difficulty():
-    pass
+    global difficulty_level
+    print(difficulty_level)
+    pygame.time.set_timer(enemy_spawn_timer, 2000 * difficulty_level)
+    pygame.time.set_timer(powerup_spawn_timer, 4000 * difficulty_level)
+    pygame.time.set_timer(bad_orbs_timer, 500 * difficulty_level)
+    difficulty_level -= 1 if difficulty_level != 1 else 0
+
+
+def reset_game():
+    global score_points, difficulty_level
+    score_points = 0
+    player.add(Player())
+    difficulty_level = 1  # set to 5 on default later
+    pygame.time.set_timer(game_start_delay, 1500)
+    pygame.time.set_timer(scaling_timer, 30000)
 
 
 while True:
@@ -127,6 +139,15 @@ while True:
             exit()
 
         if game_started:
+            if event.type == game_start_delay:
+                scale_difficulty()
+                pygame.time.set_timer(game_start_delay, 0)
+                pygame.time.set_timer(score_timer, 1000)
+                pygame.time.set_timer(scaling_timer, 15000)
+
+            if event.type == scaling_timer:
+                scale_difficulty()
+
             # Player Events
             if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown:
                 player.sprite.cast_sound.play()
@@ -141,7 +162,7 @@ while True:
                         player.sprite.rect.y, other_direction))
 
                 cast_on_cooldown = True
-                pygame.time.set_timer(player_cast_cooldown, 250)
+                pygame.time.set_timer(player_cast_cooldown, 150)
 
             if event.type == player_cast_cooldown:
                 cast_on_cooldown = False
@@ -161,7 +182,7 @@ while True:
             if event.type == powerup_spawn_timer:
                 powerups.add(PowerUp())
 
-            if event.type == scaling_difficulty_timer:
+            if event.type == scaling_timer:
                 pass
 
             if event.type == bad_orbs_timer:
@@ -170,7 +191,7 @@ while True:
         else:
             if event.type == pygame.KEYDOWN and event.key == pygame.K_RETURN:
                 game_started = True
-                player.add(Player())
+                reset_game()
 
     window.blit(background, (0, 0))
 
@@ -201,6 +222,8 @@ while True:
 
     if not game_started:
         ui_start_menu()
+        pygame.time.set_timer(score_timer, 0)
+        pygame.time.set_timer(scaling_timer, 0)
 
     pygame.display.update()
     clock.tick(60)
