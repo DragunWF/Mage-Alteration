@@ -43,11 +43,13 @@ class Player(pygame.sprite.Sprite):
         self.cast_sound = pygame.mixer.Sound("audio/cast.ogg")
         self.jump_sound = pygame.mixer.Sound("audio/jump.wav")
         self.pick_up_sound = pygame.mixer.Sound("audio/pickUp.wav")
+        self.lose_sound = pygame.mixer.Sound("audio/lose.wav")
 
         self.dmg_sound.set_volume(0.2)
         self.cast_sound.set_volume(0.2)
         self.jump_sound.set_volume(0.1)
         self.pick_up_sound.set_volume(0.5)
+        self.lose_sound.set_volume(0.6)
 
     def animate_damaged(self):
         self.index += 0.2
@@ -69,6 +71,7 @@ class Player(pygame.sprite.Sprite):
         self.health -= 1
         self.is_damaged = True
         if self.health < 1:
+            self.lose_sound.play()
             self.kill()
 
     def animate(self):
@@ -103,14 +106,14 @@ class Player(pygame.sprite.Sprite):
 
         if self.cast_mutated:
             self.rear_casting_time += 1
-            if self.rear_casting_time >= 60 * 5:
+            if self.rear_casting_time >= 60 * 7:
                 self.cast_mutated = False
                 self.rear_casting_time = 0
                 self.mutations.pop(self.mutations.index("Rear Casting"))
 
         if self.dmg_mutated:
             self.double_dmg_time += 1
-            if self.double_dmg_time >= 60 * 5:
+            if self.double_dmg_time >= 60 * 8:
                 self.dmg_mutated = False
                 self.double_dmg_time = 0
                 self.mutations.pop(self.mutations.index("Double Damage"))
@@ -164,7 +167,8 @@ class Player(pygame.sprite.Sprite):
             self.rect.bottom = 352
 
     def visibility_check(self):
-        if self.rect.x >= 815 or self.rect.x <= -15:
+        if self.rect.x >= 825 or self.rect.x <= -25:
+            self.lose_sound.play()
             self.kill()
 
     def update(self):
@@ -172,4 +176,5 @@ class Player(pygame.sprite.Sprite):
             self.mutated_state()
         self.apply_gravity()
         self.movement()
+        self.visibility_check()
         self.animate()

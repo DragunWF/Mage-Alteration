@@ -42,8 +42,9 @@ class Enemy(pygame.sprite.Sprite):
         self.knockout_time = 0
         self.knockbacked = False
 
-        self.cast_sound = pygame.mixer.Sound("audio/enemyCast.ogg")
-        self.cast_sound.set_volume(0.2)
+        if self.color == "blue":
+            self.cast_sound = pygame.mixer.Sound("audio/enemyCast.ogg")
+            self.cast_sound.set_volume(0.2)
 
     def knockback_state(self):
         self.knockout_time += 1
@@ -67,9 +68,8 @@ class Enemy(pygame.sprite.Sprite):
         if self.index >= len(self.frames) - 1:
             self.index = 0
 
-    def damaged(self):
-        self.health -= 1
-        # self.rect.x += -15 if self.direction == "right" else 15
+    def damaged(self, double_dmg):
+        self.health -= 1 if not double_dmg else 2
         self.knockbacked = True
         self.is_damaged = True
         if self.health < 1:

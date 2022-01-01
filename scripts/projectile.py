@@ -6,7 +6,8 @@ class Projectile(pygame.sprite.Sprite):
         super().__init__()
         self.direction = direction
         self.origin = origin
-        pairs = {"player": "green", "enemy": "blue", "sky": "red"}
+        pairs = {"player": "green", "mutated": "orange",
+                 "enemy": "blue", "sky": "red"}
 
         for key in pairs:
             if origin == key:
