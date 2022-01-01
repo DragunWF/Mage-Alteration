@@ -4,7 +4,7 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self):
         super().__init__()
-        self.health = 5
+        self.health = 3
         self.speed = 5
         self.jump_force = -17
 
@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.lose_sound = pygame.mixer.Sound("audio/lose.wav")
 
         self.dmg_sound.set_volume(0.2)
-        self.cast_sound.set_volume(0.2)
+        self.cast_sound.set_volume(0.08)
         self.jump_sound.set_volume(0.1)
         self.pick_up_sound.set_volume(0.5)
         self.lose_sound.set_volume(0.6)

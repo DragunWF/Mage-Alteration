@@ -1,10 +1,10 @@
 import pygame
 import scripts.ui_elements as ui
 from sys import exit
+from math import floor
 from random import choice
 from scripts.player import Player
-from scripts.enemies import Enemy
-from scripts.enemies import enemy_projectiles
+from scripts.enemies import Enemy, enemy_projectiles
 from scripts.powerups import PowerUp
 from scripts.projectile import Projectile
 
@@ -125,10 +125,18 @@ def ui_game_text():
 
 def scale_difficulty():
     global difficulty_level
-    pygame.time.set_timer(enemy_spawn_timer, 1250 * difficulty_level)
-    pygame.time.set_timer(powerup_spawn_timer, 2250 * difficulty_level)
-    pygame.time.set_timer(red_orbs_timer, 200 * difficulty_level)
-    difficulty_level -= 1 if difficulty_level != 1 else 0
+    if difficulty_level >= 1:
+        multiplier = difficulty_level if difficulty_level != 1 else 1.5
+        factor = 1500 if difficulty_level >= 4 else 50
+        factor_x = 50 if difficulty_level >= 3 else 0
+        print(f"{difficulty_level} - {multiplier}")
+        pygame.time.set_timer(
+            enemy_spawn_timer, floor(1350 * multiplier - factor))
+        pygame.time.set_timer(powerup_spawn_timer,
+                              floor(2150 * multiplier - factor))
+        pygame.time.set_timer(red_orbs_timer, floor(
+            225 * multiplier - factor_x))
+        difficulty_level -= 1
 
 
 def reset_game():
@@ -150,7 +158,7 @@ while True:
                 scale_difficulty()
                 pygame.time.set_timer(game_start_delay, 0)
                 pygame.time.set_timer(score_timer, 1000)
-                pygame.time.set_timer(scaling_timer, 30000)
+                pygame.time.set_timer(scaling_timer, 35000)
 
             if event.type == game_end_delay:
                 game_started = False
