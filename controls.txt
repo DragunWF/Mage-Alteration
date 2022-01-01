@@ -2,7 +2,7 @@ Controls:
 
 A - Move Left
 D - Move Right
-Space Bar - To Jump
-Any Mouse Button - To Shoot/Cast a spell
+Space Bar - Jump
+Any Mouse Button - Shoot/Cast a spell
 
 (WASD)
