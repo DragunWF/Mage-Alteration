@@ -44,7 +44,7 @@ player_cast_cooldown = pygame.USEREVENT + 5
 cast_on_cooldown = False
 
 score_timer = pygame.USEREVENT + 6
-bad_orbs_timer = pygame.USEREVENT + 7
+red_orbs_timer = pygame.USEREVENT + 7
 
 player_damage_cooldown = pygame.USEREVENT + 8
 player_damage_immunity = False
@@ -88,7 +88,8 @@ def check_collisions():
 
         enemy.damaged(player.sprite.dmg_mutated)
 
-    player.sprite.visibility_check()
+    if player.sprite:
+        player.sprite.visibility_check()
 
     if not player.sprite:
         pygame.time.set_timer(game_end_delay, 1500)
@@ -124,10 +125,9 @@ def ui_game_text():
 
 def scale_difficulty():
     global difficulty_level
-    print(difficulty_level)
-    pygame.time.set_timer(enemy_spawn_timer, 2000 * difficulty_level)
-    pygame.time.set_timer(powerup_spawn_timer, 4000 * difficulty_level)
-    pygame.time.set_timer(bad_orbs_timer, 500 * difficulty_level)
+    pygame.time.set_timer(enemy_spawn_timer, 1250 * difficulty_level)
+    pygame.time.set_timer(powerup_spawn_timer, 2250 * difficulty_level)
+    pygame.time.set_timer(red_orbs_timer, 200 * difficulty_level)
     difficulty_level -= 1 if difficulty_level != 1 else 0
 
 
@@ -135,9 +135,8 @@ def reset_game():
     global score_points, difficulty_level
     score_points = 0
     player.add(Player())
-    difficulty_level = 1  # Default: 5
+    difficulty_level = 5  # Default: 5
     pygame.time.set_timer(game_start_delay, 1500)
-    pygame.time.set_timer(scaling_timer, 30000)
 
 
 while True:
@@ -151,14 +150,18 @@ while True:
                 scale_difficulty()
                 pygame.time.set_timer(game_start_delay, 0)
                 pygame.time.set_timer(score_timer, 1000)
-                pygame.time.set_timer(scaling_timer, 15000)
+                pygame.time.set_timer(scaling_timer, 30000)
 
             if event.type == game_end_delay:
                 game_started = False
+                pygame.time.set_timer(enemy_spawn_timer, 0)
+                pygame.time.set_timer(powerup_spawn_timer, 0)
+                pygame.time.set_timer(red_orbs_timer, 0)
                 pygame.time.set_timer(game_end_delay, 0)
+                pygame.time.set_timer(scaling_timer, 0)
 
             # Player Events
-            if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown:
+            if event.type == pygame.MOUSEBUTTONDOWN and not cast_on_cooldown and player.sprite:
                 player.sprite.cast_sound.play()
                 cast_origin = "mutated" if player.sprite.dmg_mutated else "player"
                 player_projectiles.add(Projectile(
@@ -195,7 +198,7 @@ while True:
             if event.type == powerup_spawn_timer:
                 powerups.add(PowerUp())
 
-            if event.type == bad_orbs_timer:
+            if event.type == red_orbs_timer:
                 red_projectiles.add(Projectile(
                     "sky", choice(x_positions), -20, ""))
         else:

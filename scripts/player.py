@@ -87,7 +87,7 @@ class Player(pygame.sprite.Sprite):
     def mutated_state(self):
         if self.speed_mutated:
             self.speed_time += 1
-            self.speed = 8
+            self.speed = 7
             if self.speed_time >= 60 * 15:
                 self.speed_mutated = False
                 self.speed = 5
@@ -96,7 +96,7 @@ class Player(pygame.sprite.Sprite):
 
         if self.jump_mutated:
             self.super_jump_time += 1
-            self.jump_force = -21
+            self.jump_force = -20
             if self.super_jump_time >= 60 * 20:
                 self.jump_mutated = False
                 self.jump_force = -17
