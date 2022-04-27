@@ -1,5 +1,9 @@
 # Mage Alteration
 
+![GitHub top language](https://img.shields.io/github/languages/top/DragunWF/Mage-Alteration)
+![Lines of code](https://img.shields.io/tokei/lines/github/DragunWF/Mage-Alteration)
+![GitHub repo size](https://img.shields.io/github/repo-size/DragunWF/Mage-Alteration)
+
 Hello, I made this game for a pygame game jam in itch.io.
 
 **Links:**
@@ -8,9 +12,11 @@ Hello, I made this game for a pygame game jam in itch.io.
 - [Link to the game jam](https://itch.io/jam/pygame-new-years-jam)
 
 **Assets that were made before the game jam and some that I do not own:**
+
 - These assets are public domain by the way.
 
 **_/audio_**
+
 - cast.ogg and enemyCast.ogg: [From Kenney](https://www.kenney.nl/assets?q=audio)
 - damage.wav, jump.wav and lose.wav: [From Freesound.org](https://freesound.org/)
 - pickUp.wav **(Mine)**
